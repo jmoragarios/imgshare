@@ -1,0 +1,30 @@
+<div class="card">
+    <div class="card-header bg-dark">
+        <h3 class="car-title text-white">
+            <i class="far fa-image"></i> Upload Image
+        </h3>
+    </div>
+    <div class="card-body">
+        <form action="/images" method="POST">
+            <div class="form-group">
+                <div class="input-group">
+                    <div class="custom-file">
+                        <input type="file" name="image" class="custom-file-input" id="inputGroup" aria-describedby="inputGroupFileAddon" required/>
+                        <label class="custom-file-label" for="inputGruopFile">Choose File</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="text" name="title" class="form-control" placeholder="Title for the image" required>
+            </div>
+            <div class="form-group">
+                <textarea class="form-control" name="description" placeholder="Description for the image" rows="2"></textarea>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-success">
+                    <i class="fa fa-upload p-1"></i>Upload Image
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
