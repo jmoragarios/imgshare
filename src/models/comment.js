@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
-const { Shema } = mongoose;
-const ObjectId = Shema.ObjectId;
-const path = requiere('path');
+const { Schema } = mongoose;
+const ObjectId = Schema.ObjectId;
+const path = require('path');
 
-const CommentShema = new Shemma ({
+const CommentSchema = new Schema ({
     image_id: { type: ObjectId },
     email: { type: String },
     name: { type: String },
@@ -12,7 +12,7 @@ const CommentShema = new Shemma ({
     timeStamp: { type: Date, default: Date.now }
 });
 
-CommentShema.virtual('image')
+CommentSchema.virtual('image')
     .set( (image) => {
         this._image = image;
     })
@@ -20,4 +20,4 @@ CommentShema.virtual('image')
         return this._image;
     })
 
-module.exports = mongoose.model('Commet', CommentShema);
+module.exports = mongoose.model('Commet', CommentSchema);

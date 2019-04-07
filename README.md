@@ -9,8 +9,6 @@ Use the basic git clone command.
 ```bash
 git clone https://jmoragarios@bitbucket.org/jmoragarios/imgshare.git
 ```
-
-## Usage
 Then move to the project directory and install all the dependencies with the npm packages manager
 ```bash
 cd imgShare
