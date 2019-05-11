@@ -13,7 +13,7 @@ const ImageSchema = new Schema({
 
 ImageSchema.virtual('uniqueId')
   .get(function () {
-    return this.filename.replace(path.extname(this.filename), '');
+    return this.fileName.replace(path.extname(this.fileName), '');
   });
 
 module.exports = mongoose.model('Image', ImageSchema);

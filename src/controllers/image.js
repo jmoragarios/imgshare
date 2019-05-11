@@ -1,11 +1,18 @@
 const path = require('path');
 const { randomString } = require('../helpers/libs');
 const fs = require('fs-extra');
+const md5 = require('md5');
 const { Image, Comment } = require('../models');
 const ctrl = {};
 
-ctrl.index = (req, res) => {
-
+ctrl.index = async (req, res) => {
+    const image = await Image.findOne({
+        fileName: {
+            $regex: req.params.image_id
+        }
+    });
+    res.status(200);
+    res.render('image', { image });
 };
 
 ctrl.create = (req, res) => {
@@ -29,7 +36,7 @@ ctrl.create = (req, res) => {
                     description: req.body.description
                 });
                 const imgSaved = await newImg.save();
-                res.redirect('/');
+                res.redirect('/images/'+imgUrl);
             } else {
                 await fs.unlink(imageTemPath);
                 res.status(500).json({error: 'Only Images are allowed'});
@@ -43,7 +50,17 @@ ctrl.like = (req, res) => {
 
 };
 
-ctrl.comment = (req, res) => {
+ctrl.comment = async (req, res) => {
+    const image = await Image.findOne({fileName: {$regex: req.params.image_id}});
+    if(image){
+        const newComment = new Comment(req.body);
+        newComment.gravatar = md5(newComment.email);
+        newComment.image_id = image._id;
+        await newComment.save();
+        res.redirect('/images/'+ image.uniqueId)
+    }else {
+        res.send('u r fucked!')
+    }
 
 };
 
