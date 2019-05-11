@@ -54,5 +54,20 @@
             </div>
             </form>
         </blockquote>
+        <ul class="list-group p-4">
+            {{#each comments}}
+                <li class="list-group-item">
+                    <a href="#" class="col text-center">
+                        <img src="http://gravatar.com/avatar/{{gravatar}}?d=monsterid&s=45"/>
+                    </a>
+                    <blockquote class="col">
+                        <p class="lead">{{comment}}</p>
+                        <footer class="blockquote-footer">
+                            {{name}} - {{ timeAgo timeStamp}}
+                        </footer>
+                    </blockquote>
+                </li>
+            {{/each}}
+        </ul>
     </div>
 </div>

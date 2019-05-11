@@ -11,8 +11,11 @@ ctrl.index = async (req, res) => {
             $regex: req.params.image_id
         }
     });
+    const comments = await Comment.find({ image_id: image._id });
+    console.log(comments);
+    
     res.status(200);
-    res.render('image', { image });
+    res.render('image', { image, comments });
 };
 
 ctrl.create = (req, res) => {
