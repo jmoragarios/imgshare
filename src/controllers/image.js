@@ -6,16 +6,23 @@ const { Image, Comment } = require('../models');
 const ctrl = {};
 
 ctrl.index = async (req, res) => {
+    const viewModel = { image: {}, comments: {} };
     const image = await Image.findOne({
         fileName: {
             $regex: req.params.image_id
         }
     });
-    const comments = await Comment.find({ image_id: image._id });
-    console.log(comments);
-    
-    res.status(200);
-    res.render('image', { image, comments });
+    if(image){
+        image.views = image.views + 1;
+        await  image.save();
+        viewModel.image = image;
+        const comments = await Comment.find({ image_id: image._id });
+        viewModel.comments = comments;
+        res.status(200);
+        res.render('image', viewModel );
+    }else {
+        res.redirect('/');
+    }
 };
 
 ctrl.create = (req, res) => {
@@ -49,8 +56,17 @@ ctrl.create = (req, res) => {
     saveImage();
 };
 
-ctrl.like = (req, res) => {
+ctrl.like = async (req, res) => {
+    const image = await Image.findOne({ fileName : { $regex: req.params.image_id } });
+    if(image){
+        image.likes = image.likes + 1;
+        await image.save();
+        res.json({ likes : image.likes});
+    }else{
+        res.status(500).json({ error: 'Internal Error'});
+    }
 
+    res.redirect('/images/'+image.uniqueId);
 };
 
 ctrl.comment = async (req, res) => {
@@ -62,13 +78,19 @@ ctrl.comment = async (req, res) => {
         await newComment.save();
         res.redirect('/images/'+ image.uniqueId)
     }else {
-        res.send('u r fucked!')
+        res.redirect('/');
     }
 
 };
 
-ctrl.remove = (req, res) => {
-
+ctrl.remove = async (req, res) => {
+    const image = await Image.findOne({ fileName : { $regex: req.params.image_id } });
+    if(image){
+        await fs.unlink(path.resolve('./src/public/upload/'+ image.fileName));
+        await Comment.deleteMany({ image_id : image._id});
+        await image.remove();
+        res.json(true);
+    }
 };
 
 module.exports = ctrl;
