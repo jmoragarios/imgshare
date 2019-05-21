@@ -3,10 +3,11 @@ const { randomString } = require('../helpers/libs');
 const fs = require('fs-extra');
 const md5 = require('md5');
 const { Image, Comment } = require('../models');
+const sidebar = require('../helpers/sidebar');
 const ctrl = {};
 
 ctrl.index = async (req, res) => {
-    const viewModel = { image: {}, comments: {} };
+    let viewModel = { image: {}, comments: {} };
     const image = await Image.findOne({
         fileName: {
             $regex: req.params.image_id
@@ -18,6 +19,7 @@ ctrl.index = async (req, res) => {
         viewModel.image = image;
         const comments = await Comment.find({ image_id: image._id });
         viewModel.comments = comments;
+        viewModel = await sidebar(viewModel);
         res.status(200);
         res.render('image', viewModel );
     }else {
@@ -45,7 +47,7 @@ ctrl.create = (req, res) => {
                     fileName: imgUrl + ext,
                     description: req.body.description
                 });
-                const imgSaved = await newImg.save();
+                await newImg.save();
                 res.redirect('/images/'+imgUrl);
             } else {
                 await fs.unlink(imageTemPath);

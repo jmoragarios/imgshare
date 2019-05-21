@@ -13,11 +13,11 @@ const CommentSchema = new Schema ({
 });
 
 CommentSchema.virtual('image')
-    .set( (image) => {
+    .set( function(image) {
         this._image = image;
     })
-    .get( () => {
+    .get( function() {
         return this._image;
-    })
+    });
 
-module.exports = mongoose.model('Commet', CommentSchema);
+module.exports = mongoose.model('Comment', CommentSchema);
